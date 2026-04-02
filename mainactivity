@@ -1,0 +1,89 @@
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import com.example.myapp.databinding.ActivityMainBinding
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+    private val CHANNEL_ID = "app_notif_channel"
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        // 1. VIEW BINDING
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        createNotificationChannel()
+        loadSavedData()
+
+        // 2. VIEW INTERACTION & STORAGE
+        binding.btnSave.setOnClickListener {
+            val name = binding.etUsername.text.toString()
+            saveToPrefs(name)
+            sendNotification("Data Saved", "Hello, $name! Your data is stored.")
+        }
+    }
+
+    // 3. DATA STORAGE (SharedPrefs)
+    private fun saveToPrefs(name: String) {
+        val sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("saved_name", name)
+            apply()
+        }
+        binding.tvDisplay.text = "Saved: $name"
+    }
+
+    private fun loadSavedData() {
+        val sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val savedName = sharedPref.getString("saved_name", "No data found")
+        binding.tvDisplay.text = "Saved: $savedName"
+    }
+
+    // 4. NOTIFICATIONS
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                CHANNEL_ID, "Default Channel",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            val manager = getSystemService(NotificationManager::class.java)
+            manager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun sendNotification(title: String, content: String) {
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setContentTitle(title)
+            .setContentText(content)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+        NotificationManagerCompat.from(this).notify(101, builder.build())
+    }
+
+    // 5. MENUS
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menu?.add("Clear Data") // Adding menu item programmatically for simplicity
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.title == "Clear Data") {
+            getSharedPreferences("UserPrefs", Context.MODE_PRIVATE).edit().clear().apply()
+            binding.tvDisplay.text = "Data Cleared"
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+}
