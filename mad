@@ -1,0 +1,469 @@
+activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:padding="16dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Products"
+        android:textSize="22sp"
+        android:textStyle="bold"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Shirts - Rs.500"/>
+    <Button
+        android:id="@+id/btnAddShirt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add to Cart"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Shoes - Rs.900"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnAddShoe"
+        android:text="Add to Cart"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnViewProduct"
+        android:text="View Cart"/>
+</LinearLayout>
+activity_cart.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your Cart"
+        android:textStyle="bold"
+        android:textSize="22sp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtItems"
+        android:text="Items will be shown here"
+        android:layout_marginTop="10dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="22sp"
+        android:id="@+id/txtTotal"
+        android:text="Total: Rs.0"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnCheckout"
+        android:text="Checkout"
+        android:layout_marginTop="20dp"/>
+</LinearLayout>
+MainActivity.kt
+package com.example.modellab
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import android.widget.Button
+import android.content.Intent
+
+class MainActivity : AppCompatActivity() {
+    var totalAmount=0
+    var items=""
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        val btnShirt=findViewById<Button>(R.id.btnAddShirt)
+        val btnShoe=findViewById<Button>(R.id.btnAddShoe)
+        val btnViewCart=findViewById<Button>(R.id.btnViewProduct)
+
+        btnShirt.setOnClickListener {
+            totalAmount+=500
+            items+="Shirts\n"
+        }
+        btnShoe.setOnClickListener {
+            totalAmount+=900
+            items+="Shoes\n"
+        }
+        btnViewCart.setOnClickListener {
+            val intent= Intent(this, CartActivity::class.java)
+            intent.putExtra("items",items)
+            intent.putExtra("total",totalAmount)
+            startActivity(intent)
+        }
+
+    }
+}
+CartActivity.kt
+package com.example.modellab
+
+import android.widget.Button
+import android.widget.TextView
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+class CartActivity: AppCompatActivity(){
+    override fun onCreate(savedInstanceState: Bundle?){
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_cart)
+
+        val txtItems=findViewById<TextView>(R.id.txtItems)
+        val txttotal=findViewById<TextView>(R.id.txtTotal)
+        val btncheckout=findViewById<Button>(R.id.btnCheckout)
+
+        val items=intent.getStringExtra("items")
+        val total=intent.getIntExtra("total",0)
+
+        txtItems.text=items
+        txttotal.text="Total: $total"
+
+        btncheckout.setOnClickListener {
+            txtItems.text="Ordered Successfully!"
+        }
+
+    }
+}
+
+
+On Thu, Apr 2, 2026 at 10:04 AM YUVANSANKAR NB <yuvansankar@student.tce.edu> wrote:
+package com.example.audioplayer
+
+import android.media.MediaPlayer
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.widget.Button
+import android.widget.Toast
+
+class MainActivity : AppCompatActivity() {
+
+    lateinit var song1: Button
+    lateinit var song2: Button
+    lateinit var song3: Button
+    lateinit var stop: Button
+
+    var mediaPlayer: MediaPlayer? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        song1 = findViewById(R.id.song1Btn)
+        song2 = findViewById(R.id.song2Btn)
+        song3 = findViewById(R.id.song3Btn)
+        stop = findViewById(R.id.stopBtn)
+
+        song1.setOnClickListener {
+            playAudio(R.raw.song1)
+            Toast.makeText(this, "Playing Song 1", Toast.LENGTH_SHORT).show()
+        }
+
+        song2.setOnClickListener {
+            playAudio(R.raw.song2)
+            Toast.makeText(this, "Playing Song 2", Toast.LENGTH_SHORT).show()
+        }
+
+        song3.setOnClickListener {
+            playAudio(R.raw.song3)
+            Toast.makeText(this, "Playing Song 3", Toast.LENGTH_SHORT).show()
+        }
+
+        stop.setOnClickListener {
+            stopAudio()
+            Toast.makeText(this, "Audio Stopped", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun playAudio(resId: Int) {
+        stopAudio() // stop previous song if playing
+        mediaPlayer = MediaPlayer.create(this, resId)
+        mediaPlayer?.start()
+    }
+
+    private fun stopAudio() {
+        if (mediaPlayer != null) {
+            if (mediaPlayer!!.isPlaying) {
+                mediaPlayer!!.stop()
+            }
+            mediaPlayer!!.release()
+            mediaPlayer = null
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopAudio()
+    }
+}
+
+On Thu, Apr 2, 2026 at 8:20 AM YUVANSANKAR NB <yuvansankar@student.tce.edu> wrote:
+package com.example.modellab
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import android.widget.Button
+import android.content.Intent
+
+class MainActivity : AppCompatActivity() {
+    var totalAmount = 0
+    var items = ""
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        val btnShirt = findViewById<Button>(R.id.btnAddShirt)
+        val btnShoe = findViewById<Button>(R.id.btnAddShoe)
+        val btnViewCart = findViewById<Button>(R.id.btnViewProduct)
+
+        btnShirt.setOnClickListener {
+            totalAmount += 500
+            items += "Shirt\n"
+        }
+
+        btnShoe.setOnClickListener {
+            totalAmount += 900
+            items += "Shoes\n"
+        }
+
+        btnViewCart.setOnClickListener {
+            val sharedPref = getSharedPreferences("CartData", MODE_PRIVATE)
+            val editor = sharedPref.edit()
+
+            editor.putString("items", items)
+            editor.putInt("total", totalAmount)
+            editor.apply()
+
+            val intent = Intent(this, CartActivity::class.java)
+            startActivity(intent)
+        }
+    }
+}
+
+package com.example.modellab
+
+import android.widget.Button
+import android.widget.TextView
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Build
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+
+class CartActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_cart)
+
+        val txtItems = findViewById<TextView>(R.id.txtItems)
+        val txtTotal = findViewById<TextView>(R.id.txtTotal)
+        val btnCheckout = findViewById<Button>(R.id.btnCheckout)
+
+        // 🔹 Get data from SharedPreferences
+        val sharedPref = getSharedPreferences("CartData", MODE_PRIVATE)
+        val items = sharedPref.getString("items", "")
+        val total = sharedPref.getInt("total", 0)
+
+        txtItems.text = items
+        txtTotal.text = "Total: $total"
+
+        btnCheckout.setOnClickListener {
+            txtItems.text = "Ordered Successfully!"
+
+            // 🔹 Clear stored data after order
+            sharedPref.edit().clear().apply()
+
+            showNotification()
+        }
+    }
+
+    private fun showNotification() {
+        val channelId = "OrderId"
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                channelId,
+                "Order Notification",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+
+            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.createNotificationChannel(channel)
+        }
+
+        val builder = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setContentTitle("Order")
+            .setContentText("Your order has been successfully ordered!")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
+
+        NotificationManagerCompat.from(this).notify(1, builder.build())
+    }
+} 
+
+package com.example.modellab
+
+import android.content.Context
+import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteOpenHelper
+
+class DBHelper(context: Context) :
+    SQLiteOpenHelper(context, "CartDB", null, 1) {
+
+    override fun onCreate(db: SQLiteDatabase) {
+        db.execSQL("CREATE TABLE cart(item TEXT, price INTEGER)")
+    }
+
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        db.execSQL("DROP TABLE IF EXISTS cart")
+        onCreate(db)
+    }
+
+    // ➕ Add item
+    fun addItem(item: String, price: Int) {
+        writableDatabase.execSQL(
+            "INSERT INTO cart VALUES('$item', $price)"
+        )
+    }
+
+    // 📦 Get items + total
+    fun getItems(): Pair<String, Int> {
+        val cursor = readableDatabase.rawQuery("SELECT * FROM cart", null)
+
+        var items = ""
+        var total = 0
+
+        while (cursor.moveToNext()) {
+            items += cursor.getString(0) + "\n"
+            total += cursor.getInt(1)
+        }
+
+        cursor.close()
+        return Pair(items, total)
+    }
+
+    // ❌ Clear cart
+    fun clearCart() {
+        writableDatabase.execSQL("DELETE FROM cart")
+    }
+}
+
+package com.example.modellab
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import android.widget.Button
+import android.content.Intent
+
+class MainActivity : AppCompatActivity() {
+
+    lateinit var db: DBHelper
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        db = DBHelper(this)
+
+        val btnShirt = findViewById<Button>(R.id.btnAddShirt)
+        val btnShoe = findViewById<Button>(R.id.btnAddShoe)
+        val btnViewCart = findViewById<Button>(R.id.btnViewProduct)
+
+        btnShirt.setOnClickListener {
+            db.insertItem("Shirt", 500)
+        }
+
+        btnShoe.setOnClickListener {
+            db.insertItem("Shoes", 900)
+        }
+
+        btnViewCart.setOnClickListener {
+            val intent = Intent(this, CartActivity::class.java)
+            startActivity(intent)
+        }
+    }
+}
+package com.example.modellab
+
+import android.widget.Button
+import android.widget.TextView
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Build
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+
+class CartActivity : AppCompatActivity() {
+
+    lateinit var db: DBHelper
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_cart)
+
+        db = DBHelper(this)
+
+        val txtItems = findViewById<TextView>(R.id.txtItems)
+        val txtTotal = findViewById<TextView>(R.id.txtTotal)
+        val btnCheckout = findViewById<Button>(R.id.btnCheckout)
+
+        // 🔹 Get data from SQLite
+        val data = db.getAllItems()
+        txtItems.text = data.first
+        txtTotal.text = "Total: ${data.second}"
+
+        btnCheckout.setOnClickListener {
+            txtItems.text = "Ordered Successfully!"
+
+            // 🔹 Clear database after order
+            db.clearCart()
+
+            showNotification()
+        }
+    }
+
+    private fun showNotification() {
+        val channelId = "OrderId"
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                channelId,
+                "Order Notification",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+
+            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.createNotificationChannel(channel)
+        }
+
+        val builder = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setContentTitle("Order")
+            .setContentText("Your order has been successfully ordered!")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
+
+        NotificationManagerCompat.from(this).notify(1, builder.build())
+    }
+}
+
+
+
