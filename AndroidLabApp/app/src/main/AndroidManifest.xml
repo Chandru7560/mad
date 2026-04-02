@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.lab.allinonelab">
+
+    <!-- Permissions for Location & Storage -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="All-In-One Lab"
+        android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
+        tools:targetApi="31">
+
+        <!-- 1. MainActivity - Hub -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- 2. Layouts Demo Activity -->
+        <activity android:name=".LayoutsActivity" />
+
+        <!-- 3. Views & Widgets Demo Activity -->
+        <activity android:name=".ViewsWidgetsActivity" />
+
+        <!-- 4. Second Activity (for Intent demo) -->
+        <activity android:name=".SecondActivity" />
+
+        <!-- 5. Menu Demo Activity -->
+        <activity android:name=".MenuActivity" />
+
+        <!-- 6. Dialog & Notification Demo Activity -->
+        <activity android:name=".DialogNotificationActivity" />
+
+        <!-- 7. Location Demo Activity -->
+        <activity android:name=".LocationActivity" />
+
+        <!-- 8. Data Storage Demo Activity -->
+        <activity android:name=".DataStorageActivity" />
+
+    </application>
+</manifest>

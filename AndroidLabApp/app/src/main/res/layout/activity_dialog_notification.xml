@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Layout for DialogNotificationActivity -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dialogs & Notifications"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btnAlertDialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1. Alert Dialog"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnListDialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2. List Dialog"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnDatePicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="3. Date Picker Dialog"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnTimePicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="4. Time Picker Dialog"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnProgressDialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="5. Custom Input Dialog"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnNotification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="6. Send Notification"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:id="@+id/tvDialogResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dialog result will appear here..."
+            android:textSize="16sp"
+            android:padding="12dp"
+            android:background="#E8EAF6"
+            android:textColor="#283593" />
+
+    </LinearLayout>
+</ScrollView>
